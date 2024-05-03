@@ -1,14 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useState } from 'react';
-import {createUserWithEmailAndPassword} from 'firebase/auth'
 import {auth} from './src/services/firebaseConfig'
-import {signInWithEmailAndPassword, sendPasswordResetEmail,} from "firebase/auth"
+import {signInWithEmailAndPassword, sendPasswordResetEmail,createUserWithEmailAndPassword} from "firebase/auth"
 
 
 export default function App() {
-  //const[email,setEmail]=useState('')
-  const email = "fernandopro1201@gmail.com"
+  const[email,setEmail]=useState('')
   const[senha,setSenha]=useState('')
 
   const login = () =>{
@@ -28,12 +26,10 @@ export default function App() {
   });
   }
 
-  const esqueceuSenha = (email) => {
-
-    console.log("reset email sent to " + email);
-    sendPasswordResetEmail(auth, email, null)
-        .then(() => {
-            alert("reset email sent to " + email);
+  const esqueceuSenha = async () => {
+    await sendPasswordResetEmail(auth, email)
+        .then((sendPasswordResetEmail) => {
+          alert("reset email sent to " + email)
         })
         .catch(function (e) {
             console.log(e);
