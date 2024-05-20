@@ -1,59 +1,79 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useState } from 'react';
-import {auth} from './src/services/firebaseConfig'
-import {signInWithEmailAndPassword, sendPasswordResetEmail,createUserWithEmailAndPassword} from "firebase/auth"
+import { auth } from './src/services/firebaseConfig'
+import { signInWithEmailAndPassword, sendPasswordResetEmail, createUserWithEmailAndPassword } from "firebase/auth"
 
 
 export default function App() {
-  const[email,setEmail]=useState('')
-  const[senha,setSenha]=useState('')
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
 
-  const login = () =>{
-  createUserWithEmailAndPassword(auth, email, senha)
-    .then((userCredential) => {
-      const user = userCredential.user;
+  const cadastrar = () => {
+    createUserWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user)
 
-      console.log(user)
-    
-  })
-    .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    
-    console.log(errorMessage)
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
 
-  });
+        console.log(errorMessage)
+
+      });
+  }
+
+  const login = () => {
+    signInWithEmailAndPassword(auth, email, senha)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        alert("USUÁRIO LOGADO COM SUCESSO")
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        console.log(errorMessage)
+      });
   }
 
   const esqueceuSenha = async () => {
     await sendPasswordResetEmail(auth, email)
-        .then((sendPasswordResetEmail) => {
-          alert("reset email sent to " + email)
-        })
-        .catch(function (e) {
-            console.log(e);
-        });
+      .then((sendPasswordResetEmail) => {
+        alert("reset email sent to " + email)
+      })
+      .catch(function (e) {
+        console.log(e);
+      });
   }
 
   return (
     <View style={styles.container}>
-      <TextInput 
+      <TextInput
         placeholder='Digite seu email'
         value={email}
-        onChangeText={(valor)=>setEmail(valor)}
+        onChangeText={(valor) => setEmail(valor)}
       />
-      <TextInput 
+      <TextInput
         placeholder='Digite sua senha'
         value={senha}
-        onChangeText={(valor)=>setSenha(valor)}
+        //secureTextEntry={true}
+        onChangeText={(valor) => setSenha(valor)}
       />
+
       <TouchableOpacity onPress={login}>
-        <Text>Enviar</Text>
+        <Text>Login</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={esqueceuSenha}>
         <Text>Esqueceu a senha</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={cadastrar}>
+        <Text>Cadastrar</Text>
       </TouchableOpacity>
 
     </View>
